@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.TradeMapper">
+	<insert id="enrollInfo" parameterType="com.ssafy.happyhouse.model.TradeInfoDto">
+		insert 
+		into tradeinfo 
+		values (#{tradeCode}, #{dong}, #{aptName}, #{price}, #{size}, #{dealDate}, #{address}, #{buildYear})
+	</insert>
+	
+	<insert id="enrollCode" parameterType="string">
+		insert
+		into savedCode
+		values (#{tradeCode})
+	</insert>	
+	
+	<select id="checkInfo" parameterType="string" resultType="boolean">
+		select if(count(*) > 0, 1, 0) 
+		from savedCode 
+		where tradeCode = #{tradeCode}
+	</select>
+	
+	<select id="getTradeList" parameterType="TradeParameterDto" resultType="TradeInfoDto">
+		select * 
+		from tradeinfo
+		where (aptName like CONCAT('%', #{searchword}, '%')) and tradeCode = #{tradeCode} 
+		<if test="dong != null">
+			and dong = #{dong}
+		</if>
+	</select>
+	
+</mapper>

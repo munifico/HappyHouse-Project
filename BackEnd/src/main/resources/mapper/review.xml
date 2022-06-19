@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.model.mapper.ReviewMapper">
+
+	<!-- 게시글 전체 조회 -->
+	<select id="selectReview" resultType="ReviewDto">
+		select articleno, userid, subject, content, hit, regtime
+		from review 
+		order by articleno desc
+	</select>
+	
+	<!-- 게시글 상세 조회 -->
+	<select id="selectReviewByNo" resultType="ReviewDto">
+		select articleno, subject, userid, content, hit, regtime
+		from review 
+		where articleno = #{articleno}
+	</select>
+
+	<!-- 게시글 등록 -->
+	<insert id="insertReview" parameterType="ReviewDto">
+		insert into review(
+			subject, userid, content
+		) values (
+			#{subject}, #{userid}, #{content}
+		)
+	</insert>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateReview" parameterType="ReviewDto">
+		update review 
+		   set subject = #{subject}, 
+		   	   userid = #{userid}, 
+		   	   content = #{content}
+		 where articleno = #{articleno}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		delete 
+		from review 
+		where articleno = #{articleno}
+	</delete>
+
+</mapper>
+

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.QnAMapper">
+
+	<insert id="registerQnA" parameterType="QnADto">
+		insert into qna (userid, title, content, answer)
+		values (#{userid}, #{title}, #{content}, "")
+	</insert>
+
+	<sql id="search">
+		<if test="word != null and word != ''">
+			<choose>
+				<when test="key.equals('all')">
+					subject like concat('%', #{word}, '%') or content like concat('%', #{word}, '%')
+				</when>
+				<when test="key.equals('title')">
+					subject like concat('%', #{word}, '%')
+				</when>
+				<when test="key.equals('content')">
+					content like concat('%', #{word}, '%')
+				</when>
+				<when test="key.equals('answer')">
+					content like concat('%', #{word}, '%')
+				</when>
+			</choose>
+		</if>
+	</sql>
+	
+	<select id="listQnA" parameterType="map" resultType="QnADto">
+		select *
+		from qna
+		<where>
+			<include refid="search"></include>
+		</where>		
+		order by regtime desc
+		<!-- limit #{start}, #{spp} -->
+	</select>
+
+	<select id="getTotalQnACount" parameterType="map" resultType="integer">
+		select count(*)
+		from qna
+		<where>
+			<include refid="search"></include>
+		</where>		
+	</select>
+	
+	<select id="getQnAbyNo" parameterType="integer" resultType="QnADto">
+		select *
+		from qna
+		where qnano = #{qnano}
+	</select>
+	
+	<update id="updateQnA" parameterType="QnADto">
+		update qna
+		set title = #{title}, content = #{content}, answer = #{answer}
+		where qnano = #{qnano}
+	</update>
+	
+	<delete id="deleteQnAbyNo" parameterType="integer">
+		delete from qna
+		where qnano = #{qnaㅜo}
+	</delete>
+</mapper>
